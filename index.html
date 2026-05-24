@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>考研刷题网站</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <span>📚</span>
+          <span>考研刷题网站</span>
+        </div>
+        <nav class="nav-links">
+          <a href="#" data-page="home" class="active">首页</a>
+          <a href="#" data-page="dashboard">考研助手</a>
+          <a href="#" data-page="practice">练习</a>
+          <a href="#" data-page="exam">模拟考试</a>
+          <a href="#" data-page="wrong">错题本</a>
+          <a href="#" data-page="stats">学习统计</a>
+        </nav>
+        <div class="header-right">
+          <span id="userInfo" class="hidden">欢迎, <span id="userName"></span></span>
+          <button class="btn btn-primary" id="loginBtn">登录</button>
+          <button class="btn btn-secondary hidden" id="logoutBtn">退出</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div id="page-dashboard" class="page hidden">
+        <div id="main-content"></div>
+      </div>
+      <div id="page-home" class="page active">
+        <section class="hero-section">
+          <h1>欢迎使用考研刷题网站</h1>
+          <p>高效备考，智能练习，助你一战成硕</p>
+        </section>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="totalQuestions">-</div>
+            <div class="stat-label">题目总数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalSubjects">-</div>
+            <div class="stat-label">科目数量</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="userAccuracy">-</div>
+            <div class="stat-label">您的正确率</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="todayPractice">-</div>
+            <div class="stat-label">今日练习</div>
+          </div>
+        </div>
+
+        <div class="subjects-grid">
+          <div class="subject-card politics" data-subject="政治">
+            <div class="subject-icon">📖</div>
+            <div class="subject-name">政治</div>
+            <div class="subject-desc">马克思主义基本原理、毛泽东思想、中国近代史纲要、思想道德与法治</div>
+          </div>
+          <div class="subject-card math" data-subject="数学">
+            <div class="subject-icon">📐</div>
+            <div class="subject-name">数学</div>
+            <div class="subject-desc">高等数学、线性代数、概率论与数理统计</div>
+          </div>
+          <div class="subject-card english" data-subject="英语">
+            <div class="subject-icon">🔤</div>
+            <div class="subject-name">英语</div>
+            <div class="subject-desc">词汇与语法、阅读理解、写作翻译</div>
+          </div>
+          <div class="subject-card professional" data-subject="专业课">
+            <div class="subject-icon">💻</div>
+            <div class="subject-name">专业课</div>
+            <div class="subject-desc">数据结构、计算机网络、操作系统</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-practice" class="page hidden">
+        <div class="practice-container">
+          <div class="practice-header">
+            <h2>章节练习</h2>
+            <div class="practice-filters">
+              <div class="filter-group">
+                <label>科目:</label>
+                <select id="subjectSelect">
+                  <option value="">选择科目</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>章节:</label>
+                <select id="chapterSelect" disabled>
+                  <option value="">选择章节</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>题型:</label>
+                <select id="typeSelect">
+                  <option value="">全部题型</option>
+                  <option value="single">单选题</option>
+                  <option value="multiple">多选题</option>
+                  <option value="fill">填空题</option>
+                  <option value="short">简答题</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" id="startPractice">开始练习</button>
+            </div>
+          </div>
+
+          <div id="practiceEmpty" class="practice-content">
+            <div class="empty-state">
+              <span>📝</span>
+              <h3>选择科目开始练习</h3>
+              <p>选择左侧科目卡片或上方筛选条件开始刷题</p>
+            </div>
+          </div>
+
+          <div id="practiceContent" class="practice-content hidden">
+            <div class="question-card" id="questionCard">
+              <p style="text-align: center; color: #666; padding: 40px;">请先选择科目开始练习</p>
+            </div>
+            <div class="practice-progress">
+              <span id="currentNum">1</span> / <span id="totalNum">10</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-exam" class="page hidden">
+        <div class="form-container">
+          <h2>模拟考试</h2>
+          <div class="form-group">
+            <label>选择科目</label>
+            <select id="examSubject">
+              <option value="">选择科目</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>题目数量</label>
+            <select id="examCount">
+              <option value="10">10道题</option>
+              <option value="20">20道题</option>
+              <option value="30">30道题</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>考试时长（分钟）</label>
+            <select id="examTime">
+              <option value="30">30分钟</option>
+              <option value="60">60分钟</option>
+              <option value="90">90分钟</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" id="startExam">开始考试</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 考试进行中页面 -->
+      <div id="page-exam-active" class="page hidden">
+        <div class="exam-container">
+          <div class="exam-header">
+            <div class="exam-timer">
+              <span>⏱️</span>
+              <span id="examTimerDisplay">30:00</span>
+            </div>
+            <div class="exam-info">
+              <span id="examSubjectDisplay">政治</span>
+              <span>·</span>
+              <span id="examProgressDisplay">0/10</span>
+            </div>
+            <button class="btn btn-danger" id="submitExamBtn">交卷</button>
+          </div>
+          
+          <div class="exam-body">
+            <div class="exam-question-area">
+              <div class="question-card" id="examQuestionCard">
+                <p style="text-align: center; color: #666; padding: 40px;">加载中...</p>
+              </div>
+              <div class="question-actions">
+                <button class="btn btn-secondary" id="examPrevBtn">上一题</button>
+                <button class="btn btn-primary" id="examNextBtn">下一题</button>
+              </div>
+            </div>
+            
+            <div class="exam-answer-sheet">
+              <h3>答题卡</h3>
+              <div class="answer-grid" id="answerSheetGrid"></div>
+              <div class="exam-tips">
+                <p>答题说明：</p>
+                <p>• 绿色：已答</p>
+                <p>• 灰色：未答</p>
+                <p>• 点击题号可快速跳转</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 考试结果页面 -->
+      <div id="page-exam-result" class="page hidden">
+        <div class="result-container">
+          <div class="result-header">
+            <h2>考试完成！</h2>
+          </div>
+          <div class="result-stats">
+            <div class="result-card">
+              <div class="result-value" id="resultCorrect">0</div>
+              <div class="result-label">正确题数</div>
+            </div>
+            <div class="result-card">
+              <div class="result-value" id="resultWrong">0</div>
+              <div class="result-label">错误题数</div>
+            </div>
+            <div class="result-card highlight">
+              <div class="result-value" id="resultAccuracy">0%</div>
+              <div class="result-label">正确率</div>
+            </div>
+          </div>
+          <div class="result-message" id="resultMessage"></div>
+          <div class="result-actions">
+            <button class="btn btn-secondary" id="backToHomeBtn">返回首页</button>
+            <button class="btn btn-primary" id="reviewExamBtn">查看错题</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-wrong" class="page hidden">
+        <h2>错题本</h2>
+        <div id="wrongList">
+          <div class="empty-state">
+            <span>📚</span>
+            <h3>暂无错题</h3>
+            <p>继续刷题，错题会自动收集到这里</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-stats" class="page hidden">
+        <h2>学习统计</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="statTotal">-</div>
+            <div class="stat-label">总答题数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statAccuracy">-</div>
+            <div class="stat-label">正确率</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statToday">-</div>
+            <div class="stat-label">今日练习</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statWrong">-</div>
+            <div class="stat-label">错题数量</div>
+          </div>
+        </div>
+        <div class="chart-container" id="heatmapContainer">
+          <h3>📅 学习热力图</h3>
+          <div class="heatmap-wrapper">
+            <div class="heatmap-months" id="heatmapMonths"></div>
+            <div class="heatmap-grid" id="heatmapGrid"></div>
+          </div>
+          <div class="heatmap-legend">
+            <span>少</span>
+            <div class="legend-cells">
+              <div class="legend-cell level-0"></div>
+              <div class="legend-cell level-1"></div>
+              <div class="legend-cell level-2"></div>
+              <div class="legend-cell level-3"></div>
+              <div class="legend-cell level-4"></div>
+            </div>
+            <span>多</span>
+          </div>
+          <div class="heatmap-stats" id="heatmapStats"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="modal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div id="modalContent">
+        <div id="loginForm">
+          <h3>用户登录</h3>
+          <div class="form-group">
+            <label>用户名</label>
+            <input type="text" id="loginUsername" placeholder="请输入用户名">
+          </div>
+          <div class="form-group">
+            <label>密码</label>
+            <input type="password" id="loginPassword" placeholder="请输入密码">
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-secondary" id="cancelLogin">取消</button>
+            <button class="btn btn-primary" id="submitLogin">登录</button>
+          </div>
+          <p style="text-align: center; margin-top: 12px;">
+            还没有账号？<button class="btn btn-outline btn-sm" id="showRegister">立即注册</button>
+          </p>
+        </div>
+
+        <div id="registerForm" class="hidden">
+          <h3>用户注册</h3>
+          <div class="form-group">
+            <label>用户名</label>
+            <input type="text" id="registerUsername" placeholder="请输入用户名">
+          </div>
+          <div class="form-group">
+            <label>邮箱</label>
+            <input type="email" id="registerEmail" placeholder="请输入邮箱">
+          </div>
+          <div class="form-group">
+            <label>密码</label>
+            <input type="password" id="registerPassword" placeholder="请输入密码">
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-secondary" id="cancelRegister">取消</button>
+            <button class="btn btn-primary" id="submitRegister">注册</button>
+          </div>
+          <p style="text-align: center; margin-top: 12px;">
+            已有账号？<button class="btn btn-outline btn-sm" id="showLogin">立即登录</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/components/question-card.js"></script>
+  <script src="/js/components/practice-mode.js"></script>
+  <script src="/js/components/exam-mode.js"></script>
+  <script src="/js/components/dashboard.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
