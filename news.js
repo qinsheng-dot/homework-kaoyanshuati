@@ -1,576 +1,94 @@
-let newsData = [
-  {
-    id: 1,
-    category: '时政要闻',
-    title: '教育部发布2026年全国硕士研究生招生工作管理规定',
-    summary: '教育部印发《2026年全国硕士研究生招生工作管理规定》，明确招生政策、考试安排、复试调剂等事项...',
-    content: `教育部近日印发《2026年全国硕士研究生招生工作管理规定》（以下简称《规定》），对2026年全国硕士研究生招生工作作出全面部署。
+const express = require('express');
+const router = express.Router();
+const { getNews, getNewsByCategory, updateNews, inspirationalQuotes, studyTips } = require('../data/news');
 
-《规定》明确，2026年全国硕士研究生招生考试初试时间为2025年12月20日至21日。超过3小时的考试科目在12月22日进行。
-
-在招生政策方面，《规定》强调要深化考试招生改革，优化考试科目设置，加强对考生综合素质和能力的考查。同时，进一步规范招生行为，强化信息公开，确保招生工作公平公正。
-
-关于复试调剂，《规定》要求各招生单位要坚持按需招生、全面衡量、择优录取、宁缺毋滥的原则，严格执行国家划定的复试分数线，规范复试程序，提高复试工作质量。
-
-此外，《规定》还对考生诚信考试、违规处理等方面作出了明确要求，确保考试招生工作有序进行。`,
-    date: new Date().toISOString().split('T')[0],
-    hot: true,
-    url: 'https://www.moe.gov.cn/'
-  },
-  {
-    id: 2,
-    category: '院校动态',
-    title: '清华大学2026年硕士研究生招生简章',
-    summary: '清华大学公布2026年硕士招生简章，新增人工智能、量子信息等交叉学科方向，推免比例提高至45%...',
-    content: `清华大学日前公布了2026年硕士研究生招生简章，计划招收各类硕士研究生约5000名。
-
-今年，清华大学新增了多个交叉学科方向，包括人工智能、量子信息科学、碳中和技术等，以适应国家战略需求和科技发展趋势。
-
-在招生政策方面，清华大学将继续推行"申请-考核"制，注重考察考生的科研潜力和创新能力。推免生比例将提高至45%左右，同时加大对优秀应届本科毕业生的选拔力度。
-
-招生简章明确，报考清华大学硕士研究生的考生须符合国家统一规定的报考条件，并通过清华大学组织的初试和复试考核。
-
-学校将为研究生提供优厚的奖助学金支持，包括学业奖学金、国家助学金、社会奖学金等多种形式。`,
-    date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
-    hot: true,
-    url: 'https://yz.tsinghua.edu.cn/'
-  },
-  {
-    id: 3,
-    category: '备考经验',
-    title: '考研数学满分学霸经验：从基础到冲刺的完整路径',
-    summary: '来自北京大学数学科学学院的学霸分享150分备考心得，强调基础夯实、真题精做、错题复盘三大核心...',
-    content: `来自北京大学数学科学学院的张同学在2025年考研中取得了数学一150分的满分成绩，他分享了自己的备考经验：
-
-**一、基础阶段（3-6月）**
-- 系统梳理教材，理解基本概念和定理
-- 做课后习题，巩固基础知识
-- 建立知识框架，形成完整的知识体系
-
-**二、强化阶段（7-9月）**
-- 开始做真题，按章节分类练习
-- 总结解题方法和技巧
-- 建立错题本，定期回顾
-
-**三、冲刺阶段（10-12月）**
-- 模拟考试，严格按照考试时间进行
-- 查缺补漏，重点突破薄弱环节
-- 调整心态，保持良好的备考状态
-
-张同学强调，数学学习没有捷径，唯有踏实勤奋才能取得好成绩。每天保证6小时以上的数学学习时间，坚持就是胜利！`,
-    date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
-    hot: false,
-    url: 'https://kaoyan.wendu.com/'
-  },
-  {
-    id: 4,
-    category: '调剂信息',
-    title: '2026年全国硕士研究生招生调剂服务系统开放公告',
-    summary: '研招网发布调剂系统开放时间及注意事项，提醒考生提前准备材料，关注目标院校缺额信息...',
-    content: `全国硕士研究生招生调剂服务系统将于2026年3月下旬开放，具体时间请关注中国研究生招生信息网通知。
-
-**调剂注意事项：**
-
-1. 考生需符合调入专业的报考条件
-2. 初试成绩需达到国家划定的复试分数线
-3. 调入专业与第一志愿专业相同或相近
-4. 考生只能接受一个招生单位的待录取通知
-
-**调剂流程：**
-1. 登录研招网调剂系统
-2. 查询各招生单位的调剂信息
-3. 填报调剂志愿（可填3个平行志愿）
-4. 等待招生单位发送复试通知
-5. 参加复试并确认待录取
-
-请广大考生密切关注研招网和目标院校官网的最新信息，及时获取调剂动态。`,
-    date: new Date(Date.now() - 2 * 86400000).toISOString().split('T')[0],
-    hot: false,
-    url: 'https://yz.chsi.com.cn/'
-  },
-  {
-    id: 5,
-    category: '时政要闻',
-    title: '2026年考研政治大纲解读：二十大报告成重点',
-    summary: '教育部考试中心发布2026年考研政治大纲，二十大报告、中国式现代化等内容成为考察重点...',
-    content: `教育部考试中心发布的2026年考研政治大纲显示，今年的考察重点将集中在以下几个方面：
-
-**一、二十大报告相关内容**
-- 中国式现代化的内涵和特征
-- 高质量发展的战略部署
-- 全面建设社会主义现代化国家的目标任务
-
-**二、马克思主义基本原理**
-- 唯物辩证法的基本范畴和规律
-- 认识论和历史唯物主义的基本原理
-
-**三、毛泽东思想和中国特色社会主义理论体系**
-- 习近平新时代中国特色社会主义思想
-- 中国共产党的历史经验和优良传统
-
-**四、近现代史纲要**
-- 中国共产党领导人民进行革命、建设和改革的历程
-- 重大历史事件和重要历史人物
-
-**五、思想道德与法治**
-- 社会主义核心价值观
-- 法治思维和法律基础
-
-考生应结合大纲要求，系统复习，重点突破，争取取得好成绩。`,
-    date: new Date(Date.now() - 2 * 86400000).toISOString().split('T')[0],
-    hot: true,
-    url: 'https://www.neea.edu.cn/'
-  },
-  {
-    id: 6,
-    category: '院校动态',
-    title: '浙江大学2026年MBA招生简章及招生政策',
-    summary: '浙江大学管理学院公布2026年MBA招生计划，新增数字经济与金融科技方向，培养复合型管理人才...',
-    content: `浙江大学管理学院公布了2026年MBA招生简章，计划招收全日制MBA和非全日制MBA共计500名。
-
-**新增专业方向：**
-- 数字经济与金融科技
-- 智能制造与供应链管理
-- 医疗健康管理
-
-**招生政策：**
-- 全日制MBA学制2年，非全日制MBA学制2.5年
-- 学费标准：全日制18万元，非全日制25万元
-- 提供多种奖学金和助学金支持
-
-**申请流程：**
-1. 在线申请并提交材料
-2. 参加提前面试
-3. 参加全国MBA联考
-4. 正常批面试和录取
-
-浙江大学MBA项目致力于培养具有国际视野、创新精神和社会责任的复合型管理人才。`,
-    date: new Date(Date.now() - 3 * 86400000).toISOString().split('T')[0],
-    hot: false,
-    url: 'http://www.mba.zju.edu.cn/'
-  },
-  {
-    id: 7,
-    category: '备考经验',
-    title: '考研英语阅读理解高分策略：三步法攻克真题',
-    summary: '考研英语85分学姐分享阅读技巧：题干定位、同义替换、排除干扰项，每天精读一篇真题提分明显...',
-    content: `考研英语85分的李学姐分享了她的阅读理解备考经验，总结出"三步法"策略：
-
-**第一步：题干定位**
-- 仔细阅读题干，找出关键词
-- 根据关键词定位到原文相应段落
-- 理解题干问的是什么
-
-**第二步：同义替换**
-- 在定位段落中寻找与选项意思相同或相近的表达
-- 注意同义替换的几种形式：同义词替换、句式转换、概括总结
-
-**第三步：排除干扰项**
-- 排除与原文意思不符的选项
-- 排除过于绝对化的选项
-- 排除偷换概念的选项
-
-**备考建议：**
-- 每天精读一篇真题，分析长难句
-- 积累高频词汇和短语
-- 总结做题技巧和方法
-- 保持每天2小时以上的英语学习时间
-
-坚持这"三步法"，阅读理解成绩一定会有明显提升！`,
-    date: new Date(Date.now() - 3 * 86400000).toISOString().split('T')[0],
-    hot: false,
-    url: 'https://www.chinakaoyan.com/'
-  },
-  {
-    id: 8,
-    category: '时政要闻',
-    title: '2026年考研报名人数达550万，创历史新高',
-    summary: '教育部公布2026年考研报名数据，全国报考人数首次突破550万，考研竞争日趋激烈...',
-    content: `教育部最新数据显示，2026年全国硕士研究生招生考试报名人数达到550万人，较去年增长约8%，再创历史新高。
-
-**报名人数增长原因分析：**
-1. 就业压力加大，更多毕业生选择继续深造
-2. 研究生教育质量提升，吸引力增强
-3. 跨专业考研人数增加
-4. 在职人员考研比例上升
-
-**竞争态势：**
-- 平均录取比例约为4:1
-- 热门专业竞争更加激烈
-- 名校热门专业报录比甚至达到50:1以上
-
-**备考建议：**
-- 合理选择目标院校和专业
-- 制定科学的复习计划
-- 注重综合素质提升
-- 保持良好的心态
-
-面对激烈的竞争，考生应提前准备，科学备考，提高自身竞争力。`,
-    date: new Date(Date.now() - 4 * 86400000).toISOString().split('T')[0],
-    hot: true,
-    url: 'https://www.moe.gov.cn/jyb_xwfb/gzdt_gzdt/'
-  },
-  {
-    id: 9,
-    category: '备考经验',
-    title: '考研政治冲刺阶段复习指南：主观题答题技巧',
-    summary: '政治名师石磊分享最后三个月复习策略，选择题刷题技巧、主观题答题模板、时政热点押题...',
-    content: `政治名师石磊为广大考生分享了考研政治冲刺阶段的复习指南：
-
-**一、选择题复习技巧**
-- 系统梳理知识点，建立知识框架
-- 多做真题，总结错题规律
-- 关注时政热点，结合理论知识
-
-**二、主观题答题模板**
-- 仔细审题，明确答题要求
-- 列出答题要点，分点论述
-- 结合材料，引用相关理论
-- 注意答题格式和规范
-
-**三、时政热点重点**
-- 二十大报告核心内容
-- 年度重大事件和政策
-- 习近平总书记重要讲话精神
-
-**四、复习计划建议**
-- 10月：系统复习，查漏补缺
-- 11月：专项突破，强化训练
-- 12月：模拟考试，调整状态
-
-石磊老师强调，政治复习要注重理解和记忆相结合，掌握答题技巧，才能在考试中取得好成绩。`,
-    date: new Date(Date.now() - 5 * 86400000).toISOString().split('T')[0],
-    hot: false,
-    url: 'https://www.kaoyan.com/'
-  },
-  {
-    id: 10,
-    category: '院校动态',
-    title: '北京大学计算机学院2026年推免政策公告',
-    summary: '北京大学计算机学院公布推免细则，接收外校推免生比例不超过50%，注重科研潜力和综合素质考察...',
-    content: `北京大学计算机学院公布了2026年推荐免试研究生招生政策。
-
-**招生计划：**
-- 计划招收推免生约200名
-- 外校推免生比例不超过50%
-- 鼓励跨学科优秀学生申请
-
-**申请条件：**
-- 具有推荐免试资格的应届本科毕业生
-- 学习成绩优秀，专业排名靠前
-- 具有较强的科研潜力和创新能力
-- 英语水平良好
-
-**选拔流程：**
-1. 提交申请材料
-2. 材料审核和筛选
-3. 参加夏令营或预推免活动
-4. 综合面试
-5. 确定录取名单
-
-**注意事项：**
-- 申请截止时间：9月中旬
-- 请关注学院官网通知
-- 准备充分的申请材料
-
-北京大学计算机学院欢迎全国优秀学子报考！`,
-    date: new Date(Date.now() - 5 * 86400000).toISOString().split('T')[0],
-    hot: true,
-    url: 'https://grs.pku.edu.cn/'
-  },
-  {
-    id: 10,
-    category: '院校动态',
-    title: '复旦大学2026年研究生招生政策调整',
-    summary: '复旦大学发布2026年研究生招生政策，新增集成电路科学与工程专业，扩大直博生招生规模...',
-    content: `复旦大学近日发布2026年研究生招生政策，主要调整如下：
-
-**新增专业：**
-- 集成电路科学与工程
-- 人工智能
-- 生物医学工程
-
-**招生规模：**
-- 计划招收硕士研究生约8000名
-- 直博生比例提高至30%
-- 推免生比例保持在50%左右
-
-**奖助学金：**
-- 全覆盖学业奖学金
-- 国家助学金每年6000元
-- 多项社会奖学金
-
-复旦大学致力于培养具有国际视野和创新能力的优秀人才。`,
-    date: new Date(Date.now() - 6 * 86400000).toISOString().split('T')[0],
-    hot: false,
-    url: 'https://gsao.fudan.edu.cn/'
-  },
-  {
-    id: 11,
-    category: '院校动态',
-    title: '上海交通大学2026年研究生招生简章发布',
-    summary: '上海交通大学公布2026年研究生招生简章，新增新能源与储能技术方向，优化招生流程...',
-    content: `上海交通大学发布2026年研究生招生简章，主要内容如下：
-
-**招生计划：**
-- 硕士研究生约7500名
-- 博士研究生约2500名
-
-**新增方向：**
-- 新能源与储能技术
-- 智能制造
-- 网络空间安全
-
-**申请方式：**
-- 网上报名
-- 提交申请材料
-- 参加复试考核
-
-上海交通大学欢迎优秀学子报考！`,
-    date: new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0],
-    hot: false,
-    url: 'https://www.gs.sjtu.edu.cn/'
-  },
-  {
-    id: 12,
-    category: '院校动态',
-    title: '南京大学2026年研究生招生政策解读',
-    summary: '南京大学发布2026年研究生招生政策，强调创新能力培养，提供优厚奖助学金...',
-    content: `南京大学发布2026年研究生招生政策，重点内容如下：
-
-**培养特色：**
-- 强调创新能力培养
-- 提供国际交流机会
-- 实行导师负责制
-
-**奖助体系：**
-- 学业奖学金全覆盖
-- 国家助学金
-- 三助岗位津贴
-
-**招生规模：**
-- 硕士研究生约6000名
-- 博士研究生约1800名
-
-南京大学期待你的加入！`,
-    date: new Date(Date.now() - 8 * 86400000).toISOString().split('T')[0],
-    hot: false,
-    url: 'https://grawww.nju.edu.cn/'
+router.get('/news', (req, res) => {
+  const { category } = req.query;
+  let filteredNews = getNews();
+  
+  if (category) {
+    filteredNews = getNewsByCategory(category);
   }
-];
+  
+  res.json({
+    success: true,
+    data: filteredNews
+  });
+});
 
-const inspirationalQuotes = [
-  '"每一个优秀的人，都有一段沉默的时光，那段时光，是付出了很多努力却得不到结果的日子，我们把它叫做扎根。"',
-  '"考研就像在黑屋子里洗衣服，你不知道洗干净了没有，只能一遍一遍地洗。等到上考场的那一刻，灯亮了，你发现有的人忘记加洗衣粉，有的人用的是洗衣机。但只要你认真地洗过了每一个地方，那件衣服一定可以光亮如新。"',
-  '"不是看到希望才坚持，而是坚持了才看到希望。"',
-  '"既然选择了远方，便只顾风雨兼程。"',
-  '"星光不问赶路人，时光不负有心人。"',
-  '"考研是一条孤独的路，但当你坚持下来，你会发现自己比想象中更强大。"',
-  '"那些你早起努力的时光，那些你熬夜奋斗的日子，那些你觉得太累再也站不起来，却依然支撑自己起身的夜晚，那才是梦想的力量。"',
-  '"没有白费的努力，也没有碰巧的成功。只要认真对待生活，终有一天，你的每一份努力，都将绚烂成花。"',
-  '"所谓的奇迹，不过是坚持的另一个名字。"',
-  '"成功不是将来才有的，而是从决定去做的那一刻起，持续累积而成。"',
-  '"不要等待机会，而要创造机会。"',
-  '"人生最大的挑战是发现自己是谁，而第二大的挑战是对所发现的感到满意。"',
-  '"生命中最美好的事物都是免费的：微笑、拥抱、朋友、爱与美好的回忆。"',
-  '"只有那些敢于相信自己内心深处力量的人，才能改变世界。"',
-  '"成功的秘诀在于始终如一地坚持目标。"',
-  '"不要让昨天的失望，遮住明天的希望。"',
-  '"每一次的跌倒都是为了更好的站起来。"',
-  '"梦想不会逃跑，会逃跑的永远是自己。"',
-  '"努力到无能为力，拼搏到感动自己。"',
-  '"今天的努力是明天的实力。"',
-  '"你的努力，时光看得见。"',
-  '"有志者，事竟成，破釜沉舟，百二秦关终属楚。"',
-  '"苦心人，天不负，卧薪尝胆，三千越甲可吞吴。"',
-  '"学习这件事，不是缺乏时间，而是缺乏努力。"',
-  '"成功的路上并不拥挤，因为坚持的人不多。"',
-  '"时间是公平的，每个人都是24小时，差别在于如何利用。"',
-  '"知识改变命运，学习成就未来。"',
-  '"今天的汗水，是明天的收获。"',
-  '"相信自己，你比想象中更强大。"',
-  '"不积跬步，无以至千里；不积小流，无以成江海。"',
-  '"书山有路勤为径，学海无涯苦作舟。"',
-  '"业精于勤，荒于嬉；行成于思，毁于随。"',
-  '"少壮不努力，老大徒伤悲。"',
-  '"宝剑锋从磨砺出，梅花香自苦寒来。"',
-  '"吃得苦中苦，方为人上人。"',
-  '"天生我材必有用，千金散尽还复来。"',
-  '"长风破浪会有时，直挂云帆济沧海。"',
-  '"路漫漫其修远兮，吾将上下而求索。"',
-  '"千淘万漉虽辛苦，吹尽狂沙始到金。"',
-  '"黄沙百战穿金甲，不破楼兰终不还。"',
-  '"衣带渐宽终不悔，为伊消得人憔悴。"',
-  '"众里寻他千百度，蓦然回首，那人却在灯火阑珊处。"',
-  '"纸上得来终觉浅，绝知此事要躬行。"',
-  '"问渠那得清如许，为有源头活水来。"',
-  '"不畏浮云遮望眼，自缘身在最高层。"',
-  '"山重水复疑无路，柳暗花明又一村。"',
-  '"沉舟侧畔千帆过，病树前头万木春。"',
-  '"海内存知己，天涯若比邻。"',
-  '"人生自古谁无死，留取丹心照汗青。"',
-  '"粉骨碎身浑不怕，要留清白在人间。"'
-];
+router.post('/news/refresh', (req, res) => {
+  const updatedNews = updateNews();
+  res.json({
+    success: true,
+    data: updatedNews,
+    message: '新闻已更新'
+  });
+});
 
-const studyTips = [
-  '每天保证8小时高效学习时间',
-  '定期回顾错题，避免重复犯错',
-  '合理安排各科复习时间比例',
-  '保持规律作息，保证充足睡眠',
-  '每周进行一次模拟考试',
-  '及时调整学习计划，保持灵活性'
-];
+router.get('/news/:id', (req, res) => {
+  const { id } = req.params;
+  const news = getNews().find(n => n.id === parseInt(id));
+  
+  if (news) {
+    res.json({
+      success: true,
+      data: news
+    });
+  } else {
+    res.json({
+      success: false,
+      message: '新闻不存在'
+    });
+  }
+});
 
-const newsTemplates = [
-  {
-    category: '时政要闻',
-    titles: [
-      '教育部发布最新考研政策解读',
-      '2026年考研大纲发布时间确定',
-      '考研报名人数再创新高',
-      '研究生招生改革新动向',
-      '考研政治大纲新增内容解读'
-    ],
-    summaries: [
-      '教育部近日发布通知，对2026年研究生招生政策进行了重要调整，考生需密切关注...',
-      '根据教育部最新消息，2026年考研大纲预计将于近期发布，考生请做好准备...',
-      '2026年考研报名工作已结束，报名人数再次突破历史记录，竞争更加激烈...',
-      '研究生招生改革正在稳步推进，多所高校调整招生政策，注重选拔创新型人才...',
-      '考研政治大纲新增多项内容，考生需重点关注最新理论成果和时政热点...'
-    ],
-    urls: ['https://www.moe.gov.cn/', 'https://www.neea.edu.cn/', 'https://yz.chsi.com.cn/']
-  },
-  {
-    category: '院校动态',
-    titles: [
-      '{school}2026年硕士招生简章公布',
-      '{school}新增多个研究生专业',
-      '{school}推免政策重大调整',
-      '{school}研究生奖学金政策公布',
-      '{school}考研复试分数线公布'
-    ],
-    summaries: [
-      '{school}公布2026年硕士研究生招生简章，招生规模扩大，新增多个热门方向...',
-      '{school}宣布新增多个交叉学科专业，培养复合型人才，欢迎广大考生报考...',
-      '{school}调整推免政策，提高外校推免比例，注重学生综合素质考察...',
-      '{school}公布2026年研究生奖学金政策，覆盖面广，奖励力度大...',
-      '{school}公布考研复试分数线，较去年有所调整，考生请及时关注...'
-    ],
-    schools: ['清华大学', '北京大学', '浙江大学', '复旦大学', '上海交通大学', '南京大学', '中国人民大学'],
-    schoolUrls: {
-      '清华大学': 'https://yz.tsinghua.edu.cn/',
-      '北京大学': 'https://admission.pku.edu.cn/',
-      '浙江大学': 'http://grs.zju.edu.cn/',
-      '复旦大学': 'https://www.gs.fudan.edu.cn/',
-      '上海交通大学': 'https://yzb.sjtu.edu.cn/',
-      '南京大学': 'https://grawww.nju.edu.cn/',
-      '中国人民大学': 'https://pgs.ruc.edu.cn/'
+router.get('/news/categories', (req, res) => {
+  const news = getNews();
+  const categories = [...new Set(news.map(n => n.category))];
+  res.json({
+    success: true,
+    data: categories
+  });
+});
+
+router.get('/quote', (req, res) => {
+  const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
+  res.json({
+    success: true,
+    data: {
+      quote: inspirationalQuotes[randomIndex],
+      date: new Date().toISOString().split('T')[0]
     }
-  },
-  {
-    category: '备考经验',
-    titles: [
-      '考研{subject}高分经验分享',
-      '{subject}复习计划推荐',
-      '考研{subject}常见误区解析',
-      '{subject}真题高效利用方法',
-      '考研{subject}冲刺技巧'
-    ],
-    summaries: [
-      '来自{school}的学霸分享{subject}高分经验，从基础到冲刺的完整复习路径...',
-      '资深考研辅导老师推荐{subject}复习计划，科学规划时间，高效提分...',
-      '总结考研{subject}常见误区，帮助考生避开陷阱，少走弯路...',
-      '如何高效利用{subject}真题？名师教你从真题中提炼考点，针对性复习...',
-      '考研{subject}冲刺阶段技巧，临考前如何保持状态，发挥最佳水平...'
-    ],
-    subjects: ['数学', '英语', '政治', '专业课'],
-    schools: ['清华大学', '北京大学', '中国科学院大学'],
-    urls: ['https://www.kaoyan.com/', 'https://www.chinakaoyan.com/', 'https://kaoyan.wendu.com/']
-  },
-  {
-    category: '调剂信息',
-    titles: [
-      '2026年考研调剂时间安排',
-      '考研调剂注意事项汇总',
-      '调剂院校选择攻略',
-      '如何联系调剂院校导师',
-      '考研调剂复试准备指南'
-    ],
-    summaries: [
-      '2026年考研调剂工作即将开始，时间安排已公布，考生请做好准备...',
-      '总结考研调剂过程中的注意事项，帮助考生顺利完成调剂流程...',
-      '调剂院校选择攻略，如何选择适合自己的院校，提高成功率...',
-      '联系调剂院校导师的技巧和注意事项，第一印象很重要...',
-      '考研调剂复试准备指南，复试内容、形式及准备方法全面解析...'
-    ],
-    urls: ['https://yz.chsi.com.cn/', 'https://www.kaoyan.com/']
-  }
-];
+  });
+});
 
-function generateRandomNews() {
-  const template = newsTemplates[Math.floor(Math.random() * newsTemplates.length)];
-  const title = template.titles[Math.floor(Math.random() * template.titles.length)];
-  const summary = template.summaries[Math.floor(Math.random() * template.summaries.length)];
+router.get('/study-tips', (req, res) => {
+  res.json({
+    success: true,
+    data: studyTips
+  });
+});
+
+router.get('/countdown', (req, res) => {
+  const examDate = new Date('2026-12-19T08:30:00');
+  const now = new Date();
+  const diff = examDate - now;
   
-  let filledTitle = title;
-  let filledSummary = summary;
-  let url = template.urls ? template.urls[Math.floor(Math.random() * template.urls.length)] : 'https://yz.chsi.com.cn/';
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
   
-  if (template.schools) {
-    const school = template.schools[Math.floor(Math.random() * template.schools.length)];
-    filledTitle = filledTitle.replace(/{school}/g, school);
-    filledSummary = filledSummary.replace(/{school}/g, school);
-    if (template.schoolUrls && template.schoolUrls[school]) {
-      url = template.schoolUrls[school];
+  res.json({
+    success: true,
+    data: {
+      days,
+      hours,
+      minutes,
+      seconds,
+      examDate: examDate.toISOString()
     }
-  }
-  
-  if (template.subjects) {
-    const subject = template.subjects[Math.floor(Math.random() * template.subjects.length)];
-    filledTitle = filledTitle.replace(/{subject}/g, subject);
-    filledSummary = filledSummary.replace(/{subject}/g, subject);
-  }
-  
-  const maxId = Math.max(...newsData.map(n => n.id));
-  
-  return {
-    id: maxId + 1,
-    category: template.category,
-    title: filledTitle,
-    summary: filledSummary,
-    date: new Date().toISOString().split('T')[0],
-    hot: Math.random() > 0.7,
-    url: url
-  };
-}
+  });
+});
 
-function updateNews() {
-  if (Math.random() > 0.5) {
-    const newNews = generateRandomNews();
-    newsData.unshift(newNews);
-    if (newsData.length > 20) {
-      newsData.pop();
-    }
-    console.log(`📰 新增新闻: ${newNews.title}`);
-  }
-  return newsData;
-}
-
-function getNews() {
-  return newsData;
-}
-
-function getNewsByCategory(category) {
-  if (!category || category === '全部') {
-    return newsData;
-  }
-  return newsData.filter(n => n.category === category);
-}
-
-module.exports = {
-  getNews,
-  getNewsByCategory,
-  updateNews,
-  inspirationalQuotes,
-  studyTips
-};
+module.exports = router;
