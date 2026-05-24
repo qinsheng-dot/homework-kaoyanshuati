@@ -1,0 +1,21 @@
+{
+  "name": "shuatiwangzhan",
+  "version": "1.0.0",
+  "description": "考研刷题网站 - Graduate Exam Practice Platform",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "seed": "node server/seed.js"
+  },
+  "keywords": ["考研", "刷题", "题库", "exam", "practice"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sql.js": "^1.10.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5"
+  }
+}
